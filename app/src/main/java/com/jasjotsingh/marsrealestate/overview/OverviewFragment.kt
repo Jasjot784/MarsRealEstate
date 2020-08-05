@@ -3,10 +3,11 @@ package com.jasjotsingh.marsrealestate.overview
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.jasjotsingh.marsrealestate.R
 import com.jasjotsingh.marsrealestate.databinding.FragmentOverviewBinding
-import com.jasjotsingh.marsrealestate.databinding.GridViewItemBinding
 import com.jasjotsingh.marsrealestate.network.MarsApiFilter
 
 
@@ -38,6 +39,15 @@ class OverviewFragment : Fragment() {
         binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
             viewModel.displayPropertyDetails(it)
         })
+
+        viewModel.navigateToSelectedProperty.observe(viewLifecycleOwner, Observer {
+            if ( null != it ) {
+                this.findNavController().navigate(
+                    OverviewFragmentDirections.actionOverviewFragmentToDetailFragment(it))
+                viewModel.displayPropertyDetailsComplete()
+            }
+        })
+
         return binding.root
     }
 
